@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ilearn/exercises.dart';
 
 // StatelessWidget: Facts screen that displays facts with swipe functionality
 class FactScreen extends StatelessWidget {
@@ -102,6 +103,27 @@ class FactScreen extends StatelessWidget {
       body: Column(
         children: [
           // Fact display area with PageView for swiping
+          Container(
+              padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ExerciseScreen(itemName: itemName),
+                    ),
+                  );
+                },
+                icon: const Icon(Icons.menu_book),
+                label: const Text("Exercises"),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.purple.shade100,
+                  foregroundColor: Colors.black,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                ),
+              )),
+
           Expanded(
             child: PageView.builder(
               controller: pageController,
@@ -126,6 +148,7 @@ class FactScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         // Fact number indicator
+
                         Text(
                           "Fact ${index + 1} of ${facts.length}",
                           style: TextStyle(
@@ -159,42 +182,48 @@ class FactScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 // Previous button
-                ElevatedButton.icon(
-                  onPressed: () {
-                    if (pageController.page! > 0) {
-                      pageController.previousPage(
-                        duration: const Duration(milliseconds: 300),
-                        curve: Curves.easeInOut,
-                      );
-                    }
-                  },
-                  icon: const Icon(Icons.arrow_back),
-                  label: const Text("Previous"),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.purple.shade100,
-                    foregroundColor: Colors.black,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 12),
+                Container(
+                  width: 130,
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      if (pageController.page! > 0) {
+                        pageController.previousPage(
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeInOut,
+                        );
+                      }
+                    },
+                    icon: const Icon(Icons.arrow_back),
+                    label: const Text("Previous"),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.purple.shade100,
+                      foregroundColor: Colors.black,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 12),
+                    ),
                   ),
                 ),
 
                 // Next button
-                ElevatedButton.icon(
-                  onPressed: () {
-                    if (pageController.page! < facts.length - 1) {
-                      pageController.nextPage(
-                        duration: const Duration(milliseconds: 300),
-                        curve: Curves.easeInOut,
-                      );
-                    }
-                  },
-                  icon: const Icon(Icons.arrow_forward),
-                  label: const Text("Next"),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.purple.shade100,
-                    foregroundColor: Colors.black,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 12),
+                Container(
+                  width: 130,
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      if (pageController.page! < facts.length - 1) {
+                        pageController.nextPage(
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeInOut,
+                        );
+                      }
+                    },
+                    label: const Text("Next"),
+                    icon: const Icon(Icons.arrow_forward),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.purple.shade100,
+                      foregroundColor: Colors.black,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 12),
+                    ),
                   ),
                 ),
               ],
