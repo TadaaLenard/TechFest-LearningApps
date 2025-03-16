@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:ilearn/second_screen.dart';
 
+// StatefulWidget: Used for widgets that can change state
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
 
@@ -9,16 +11,12 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
+// State class for MyHomePage
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
   void _incrementCounter() {
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
       _counter++;
     });
   }
@@ -30,25 +28,22 @@ class _MyHomePageState extends State<MyHomePage> {
         data: Theme.of(context).copyWith(
           elevatedButtonTheme: ElevatedButtonThemeData(
             style: ElevatedButton.styleFrom(
-              textStyle:
-                  TextStyle(fontSize: 20), // Change only for this Scaffold
+              textStyle: TextStyle(fontSize: 20),
             ),
           ),
         ),
         child: SingleChildScrollView(
-          // Makes the screen scrollable
           child: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
-                  height: 50, // Set height
-                  color: Colors.purple, // Set background color
+                  height: 50,
+                  color: Colors.purple,
                 ),
                 Container(
-                  color: const Color.fromARGB(
-                      255, 250, 221, 255), // Background color for the row
-                  padding: EdgeInsets.all(10), // Optional padding
+                  color: const Color.fromARGB(255, 250, 221, 255),
+                  padding: EdgeInsets.all(10),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -59,7 +54,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         icon: Icon(
                           Icons.menu,
                           size: 50,
-                          color: Colors.black, // Adjust color as needed
+                          color: Colors.black,
                         ),
                       ),
                       SizedBox(
@@ -100,21 +95,17 @@ class _MyHomePageState extends State<MyHomePage> {
                           onPressed: () {},
                           style: ElevatedButton.styleFrom(
                             padding: EdgeInsets.symmetric(
-                                vertical: 12, horizontal: 16), // Adjust padding
+                                vertical: 12, horizontal: 16),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(
-                                  16), // Adjust border radius
+                              borderRadius: BorderRadius.circular(16),
                             ),
                           ),
                           child: const Column(
-                            mainAxisSize:
-                                MainAxisSize.min, // Keep button compact
+                            mainAxisSize: MainAxisSize.min,
                             children: [
                               Icon(Icons.desk_rounded,
-                                  color: Colors.purple,
-                                  size: 70), // Adjust size if needed
-                              SizedBox(
-                                  height: 4), // Space between icon and text
+                                  color: Colors.purple, size: 70),
+                              SizedBox(height: 4),
                               Text("Workshop"),
                             ],
                           ),
@@ -128,17 +119,16 @@ class _MyHomePageState extends State<MyHomePage> {
                           },
                           style: ElevatedButton.styleFrom(
                             padding: EdgeInsets.symmetric(
-                                vertical: 12, horizontal: 16), // Adjust padding
+                                vertical: 12, horizontal: 16),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(
-                                  16), // Adjust border radius
+                              borderRadius: BorderRadius.circular(16),
                             ),
                           ),
                           child: const Column(children: [
                             Icon(Icons.video_call_rounded,
-                                color: Colors.purple,
-                                size: 70), // Adjust size if needed
-                            SizedBox(height: 4), Text("Tutorial")
+                                color: Colors.purple, size: 70),
+                            SizedBox(height: 4),
+                            Text("Tutorial")
                           ]),
                         ),
                       ),
@@ -146,9 +136,9 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 ),
                 Divider(
-                  color: Colors.black, // Line color
-                  thickness: 1, // Line thickness
-                  height: 20, // Space around the divider
+                  color: Colors.black,
+                  thickness: 1,
+                  height: 20,
                 ),
                 Container(
                   padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
@@ -232,10 +222,11 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
+// StatelessWidget: Used for widgets that don't change state
 class ScrollableButtonList extends StatelessWidget {
   final List<String> items;
 
-  ScrollableButtonList({required this.items});
+  const ScrollableButtonList({required this.items});
 
   @override
   Widget build(BuildContext context) {
@@ -249,18 +240,22 @@ class ScrollableButtonList extends StatelessWidget {
               height: 70,
               child: ElevatedButton(
                 onPressed: () {
-                  print("$item Clicked");
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => FactScreen(itemName: item),
+                    ),
+                  );
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromARGB(
-                      255, 255, 234, 234), // Light grey color
+                  backgroundColor: const Color.fromARGB(255, 255, 234, 234),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20), // Rounded corners
+                    borderRadius: BorderRadius.circular(20),
                   ),
                 ),
                 child: Text(
                   item,
-                  style: TextStyle(color: Colors.black), // Text color
+                  style: TextStyle(color: Colors.black),
                 ),
               ),
             ),
