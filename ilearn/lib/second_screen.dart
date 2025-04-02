@@ -1,276 +1,5 @@
 import 'package:flutter/material.dart';
-
-void main() {
-  runApp(const MaterialApp(
-    debugShowCheckedModeBanner: false,
-    home: MyHomePage(title: 'Flutter Demo'),
-  ));
-}
-
-// StatefulWidget: Used for widgets that can change state
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-// State class for MyHomePage
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Theme(
-        data: Theme.of(context).copyWith(
-          elevatedButtonTheme: ElevatedButtonThemeData(
-            style: ElevatedButton.styleFrom(
-              textStyle: TextStyle(fontSize: 20),
-            ),
-          ),
-        ),
-        child: SingleChildScrollView(
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  height: 50,
-                  color: Colors.purple,
-                ),
-                Container(
-                  color: const Color.fromARGB(255, 250, 221, 255),
-                  padding: EdgeInsets.all(10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          print("Button Pressed!");
-                        },
-                        icon: Icon(
-                          Icons.menu,
-                          size: 50,
-                          color: Colors.black,
-                        ),
-                      ),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.5,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            print("Button Pressed!");
-                          },
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Icon(
-                                  Icons.search,
-                                ),
-                              ]),
-                        ),
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          print("Button Pressed!");
-                        },
-                        icon: Icon(
-                          size: 50,
-                          Icons.account_circle,
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      SizedBox(
-                        width: 150,
-                        child: ElevatedButton(
-                          onPressed: () {},
-                          style: ElevatedButton.styleFrom(
-                            padding: EdgeInsets.symmetric(
-                                vertical: 12, horizontal: 16),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                          ),
-                          child: const Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(Icons.desk_rounded,
-                                  color: Colors.purple, size: 70),
-                              SizedBox(height: 4),
-                              Text("Workshop"),
-                            ],
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 150,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            print("Button Pressed!");
-                          },
-                          style: ElevatedButton.styleFrom(
-                            padding: EdgeInsets.symmetric(
-                                vertical: 12, horizontal: 16),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                          ),
-                          child: const Column(children: [
-                            Icon(Icons.video_call_rounded,
-                                color: Colors.purple, size: 70),
-                            SizedBox(height: 4),
-                            Text("Tutorial")
-                          ]),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Divider(
-                  color: Colors.black,
-                  thickness: 1,
-                  height: 20,
-                ),
-                Container(
-                  padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Sciences",
-                        style: TextStyle(
-                          fontSize: 25,
-                          fontWeight: FontWeight.bold,
-                          decoration: TextDecoration.underline,
-                        ),
-                      ),
-                      SizedBox(height: 10),
-                      Text(
-                        "Physics",
-                        style: TextStyle(
-                            fontSize: 22, fontWeight: FontWeight.w500),
-                      ),
-                      SizedBox(height: 10),
-                      ScrollableButtonList(
-                        items: [
-                          "Gravity 1",
-                          "Gravity 2",
-                          "Force 1",
-                          "Force 2",
-                          "Electromagnetic"
-                        ],
-                      ),
-                      SizedBox(height: 10),
-                      SizedBox(height: 10),
-                      Text(
-                        "Biology",
-                        style: TextStyle(
-                            fontSize: 22, fontWeight: FontWeight.w500),
-                      ),
-                      SizedBox(height: 10),
-                      ScrollableButtonList(
-                        items: [
-                          "Photosynthesis",
-                          "Cell Organisation",
-                          "Nutrition",
-                          "Reproduction",
-                        ],
-                      ),
-                      SizedBox(height: 10),
-                      Text(
-                        "Language",
-                        style: TextStyle(
-                          fontSize: 25,
-                          fontWeight: FontWeight.bold,
-                          decoration: TextDecoration.underline,
-                        ),
-                      ),
-                      SizedBox(height: 10),
-                      Text(
-                        "English",
-                        style: TextStyle(
-                            fontSize: 22, fontWeight: FontWeight.w500),
-                      ),
-                      SizedBox(height: 10),
-                      ScrollableButtonList(
-                        items: [
-                          "Pronunciation",
-                          "Grammar 1",
-                          "Grammar 2",
-                          "Grammar 3",
-                          "Formal Writing"
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-// StatelessWidget: Used for widgets that don't change state
-class ScrollableButtonList extends StatelessWidget {
-  final List<String> items;
-
-  const ScrollableButtonList({required this.items});
-
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: items.map((item) {
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: SizedBox(
-              height: 70,
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => FactScreen(itemName: item),
-                    ),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromARGB(255, 255, 234, 234),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                ),
-                child: Text(
-                  item,
-                  style: TextStyle(color: Colors.black),
-                ),
-              ),
-            ),
-          );
-        }).toList(),
-      ),
-    );
-  }
-}
+import 'package:ilearn/exercises.dart';
 
 // StatelessWidget: Facts screen that displays facts with swipe functionality
 class FactScreen extends StatelessWidget {
@@ -358,10 +87,10 @@ class FactScreen extends StatelessWidget {
       };
 
   @override
-  Widget 
-build(BuildContext context) {
+  Widget build(BuildContext context) {
     // Get the appropriate facts for the selected item
-    final facts = factsByTopic[itemName] ?? ["No facts available for this topic."];
+    final facts =
+        factsByTopic[itemName] ?? ["No facts available for this topic."];
 
     // Create a PageController for swiping between facts
     final PageController pageController = PageController();
@@ -374,6 +103,27 @@ build(BuildContext context) {
       body: Column(
         children: [
           // Fact display area with PageView for swiping
+          Container(
+              padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ExerciseScreen(itemName: itemName),
+                    ),
+                  );
+                },
+                icon: const Icon(Icons.menu_book),
+                label: const Text("Exercises"),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.purple.shade100,
+                  foregroundColor: Colors.black,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                ),
+              )),
+
           Expanded(
             child: PageView.builder(
               controller: pageController,
@@ -398,6 +148,7 @@ build(BuildContext context) {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         // Fact number indicator
+
                         Text(
                           "Fact ${index + 1} of ${facts.length}",
                           style: TextStyle(
@@ -431,42 +182,48 @@ build(BuildContext context) {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 // Previous button
-                ElevatedButton.icon(
-                  onPressed: () {
-                    if (pageController.page! > 0) {
-                      pageController.previousPage(
-                        duration: const Duration(milliseconds: 300),
-                        curve: Curves.easeInOut,
-                      );
-                    }
-                  },
-                  icon: const Icon(Icons.arrow_back),
-                  label: const Text("Previous"),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.purple.shade100,
-                    foregroundColor: Colors.black,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 12),
+                Container(
+                  width: 130,
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      if (pageController.page! > 0) {
+                        pageController.previousPage(
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeInOut,
+                        );
+                      }
+                    },
+                    icon: const Icon(Icons.arrow_back),
+                    label: const Text("Previous"),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.purple.shade100,
+                      foregroundColor: Colors.black,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 12),
+                    ),
                   ),
                 ),
 
                 // Next button
-                ElevatedButton.icon(
-                  onPressed: () {
-                    if (pageController.page! < facts.length - 1) {
-                      pageController.nextPage(
-                        duration: const Duration(milliseconds: 300),
-                        curve: Curves.easeInOut,
-                      );
-                    }
-                  },
-                  icon: const Icon(Icons.arrow_forward),
-                  label: const Text("Next"),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.purple.shade100,
-                    foregroundColor: Colors.black,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 12),
+                Container(
+                  width: 130,
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      if (pageController.page! < facts.length - 1) {
+                        pageController.nextPage(
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeInOut,
+                        );
+                      }
+                    },
+                    label: const Text("Next"),
+                    icon: const Icon(Icons.arrow_forward),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.purple.shade100,
+                      foregroundColor: Colors.black,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 12),
+                    ),
                   ),
                 ),
               ],
