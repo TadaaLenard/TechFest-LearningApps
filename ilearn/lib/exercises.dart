@@ -35,7 +35,7 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
     try {
       // Request for the question
       final questionResponse = await model.generateContent(
-          [Content.text('Generate a question about gravity.')]);
+          [Content.text('Generate a question about ${widget.itemName}.')]);
 
       setState(() {
         question = questionResponse.text ?? "No question generated.";
