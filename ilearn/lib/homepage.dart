@@ -1,17 +1,40 @@
 import 'package:flutter/material.dart';
+import 'package:ilearn/search.dart';
 import 'package:ilearn/second_screen.dart';
 
-// StatefulWidget: Used for widgets that can change state
+// ✅ Organized topic data
+final Map<String, List<String>> topicData = {
+  "Physics": [
+    "Gravity 1",
+    "Gravity 2",
+    "Force 1",
+    "Force 2",
+    "Electromagnetic",
+  ],
+  "Biology": [
+    "Photosynthesis",
+    "Cell Organisation",
+    "Nutrition",
+    "Reproduction",
+  ],
+  "English": [
+    "Pronunciation",
+    "Grammar 1",
+    "Grammar 2",
+    "Grammar 3",
+    "Formal Writing",
+  ],
+};
+
+// 🔲 Main Home Page
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
-
   final String title;
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-// State class for MyHomePage
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
@@ -23,6 +46,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final allItems = topicData.values.expand((list) => list).toList();
+
     return Scaffold(
       body: Theme(
         data: Theme.of(context).copyWith(
@@ -37,50 +62,31 @@ class _MyHomePageState extends State<MyHomePage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Container(
-                  height: 50,
-                  color: Colors.purple,
-                ),
+                Container(height: 50, color: Colors.purple),
                 Container(
                   color: const Color.fromARGB(255, 250, 221, 255),
                   padding: EdgeInsets.all(10),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      IconButton(
-                        onPressed: () {
-                          print("Button Pressed!");
-                        },
-                        icon: Icon(
-                          Icons.menu,
-                          size: 50,
-                          color: Colors.black,
-                        ),
-                      ),
                       SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.5,
+                        width: MediaQuery.of(context).size.width * 0.8,
                         child: ElevatedButton(
                           onPressed: () {
-                            print("Button Pressed!");
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    SearchScreen(items: allItems),
+                              ),
+                            );
                           },
                           child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Icon(
-                                  Icons.search,
-                                ),
-                              ]),
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [Icon(Icons.search)],
+                          ),
                         ),
                       ),
-                      IconButton(
-                        onPressed: () {
-                          print("Button Pressed!");
-                        },
-                        icon: Icon(
-                          size: 50,
-                          Icons.account_circle,
-                        ),
-                      )
                     ],
                   ),
                 ),
@@ -135,81 +141,21 @@ class _MyHomePageState extends State<MyHomePage> {
                     ],
                   ),
                 ),
-                Divider(
-                  color: Colors.black,
-                  thickness: 1,
-                  height: 20,
-                ),
+                Divider(color: Colors.black, thickness: 1, height: 20),
+
+                // ✅ Sciences
                 Container(
                   padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        "Sciences",
-                        style: TextStyle(
-                          fontSize: 25,
-                          fontWeight: FontWeight.bold,
-                          decoration: TextDecoration.underline,
-                        ),
-                      ),
-                      SizedBox(height: 10),
-                      Text(
-                        "Physics",
-                        style: TextStyle(
-                            fontSize: 22, fontWeight: FontWeight.w500),
-                      ),
-                      SizedBox(height: 10),
-                      ScrollableButtonList(
-                        items: [
-                          "Gravity 1",
-                          "Gravity 2",
-                          "Force 1",
-                          "Force 2",
-                          "Electromagnetic"
-                        ],
-                      ),
-                      SizedBox(height: 10),
-                      SizedBox(height: 10),
-                      Text(
-                        "Biology",
-                        style: TextStyle(
-                            fontSize: 22, fontWeight: FontWeight.w500),
-                      ),
-                      SizedBox(height: 10),
-                      ScrollableButtonList(
-                        items: [
-                          "Photosynthesis",
-                          "Cell Organisation",
-                          "Nutrition",
-                          "Reproduction",
-                        ],
-                      ),
-                      SizedBox(height: 10),
-                      Text(
-                        "Language",
-                        style: TextStyle(
-                          fontSize: 25,
-                          fontWeight: FontWeight.bold,
-                          decoration: TextDecoration.underline,
-                        ),
-                      ),
-                      SizedBox(height: 10),
-                      Text(
-                        "English",
-                        style: TextStyle(
-                            fontSize: 22, fontWeight: FontWeight.w500),
-                      ),
-                      SizedBox(height: 10),
-                      ScrollableButtonList(
-                        items: [
-                          "Pronunciation",
-                          "Grammar 1",
-                          "Grammar 2",
-                          "Grammar 3",
-                          "Formal Writing"
-                        ],
-                      ),
+                      SectionTitle("Sciences"),
+                      CategorySection("Physics", topicData["Physics"]!),
+                      CategorySection("Biology", topicData["Biology"]!),
+
+                      // ✅ Language
+                      SectionTitle("Language"),
+                      CategorySection("English", topicData["English"]!),
                     ],
                   ),
                 ),
@@ -222,7 +168,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-// StatelessWidget: Used for widgets that don't change state
+// 🔲 Scrollable horizontal button list
 class ScrollableButtonList extends StatelessWidget {
   final List<String> items;
 
@@ -253,10 +199,7 @@ class ScrollableButtonList extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20),
                   ),
                 ),
-                child: Text(
-                  item,
-                  style: TextStyle(color: Colors.black),
-                ),
+                child: Text(item, style: TextStyle(color: Colors.black)),
               ),
             ),
           );
@@ -264,4 +207,35 @@ class ScrollableButtonList extends StatelessWidget {
       ),
     );
   }
+}
+
+// 🔲 Reusable section title widget
+Widget SectionTitle(String title) {
+  return Padding(
+    padding: const EdgeInsets.only(bottom: 10),
+    child: Text(
+      title,
+      style: TextStyle(
+        fontSize: 25,
+        fontWeight: FontWeight.bold,
+        decoration: TextDecoration.underline,
+      ),
+    ),
+  );
+}
+
+// 🔲 Reusable category + list widget
+Widget CategorySection(String categoryName, List<String> items) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(
+        categoryName,
+        style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
+      ),
+      SizedBox(height: 10),
+      ScrollableButtonList(items: items),
+      SizedBox(height: 20),
+    ],
+  );
 }
