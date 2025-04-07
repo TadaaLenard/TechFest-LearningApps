@@ -10,7 +10,8 @@ final model = GenerativeModel(
 );
 
 String? question;
-String? answer;
+String? userAnswer;
+String? responseAnalysis;
 
 class ExerciseScreen extends StatefulWidget {
   final String itemName;
@@ -22,8 +23,7 @@ class ExerciseScreen extends StatefulWidget {
 }
 
 class _ExerciseScreenState extends State<ExerciseScreen> {
-  final PageController pageController = PageController();
-  List<bool> flippedStates = List.generate(10, (index) => false);
+  final TextEditingController _answerController = TextEditingController();
 
   @override
   void initState() {
@@ -34,32 +34,41 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
   void generateQnA() async {
     try {
       // Request for the question
-      final questionResponse = await model.generateContent(
-          [Content.text('Generate a question about ${widget.itemName}.')]);
+      final questionResponse = await model.generateContent([
+        Content.text(
+            'Generate an academic question about ${widget.itemName}. The number behind just represents the level of difficulty of the topic. Do not generate a question that is unrelated to the topic in terms of study. It should help the student to understand further about the topic.')
+      ]);
 
       setState(() {
         question = questionResponse.text ?? "No question generated.";
-      });
+        // Clear the answer and response when generating new content
 
-      // Use the generated question as a prompt for the answer
-      if (question != null && question!.isNotEmpty) {
-        final answerResponse = await model.generateContent([
+        responseAnalysis = null;
+        userAnswer = null;
+      });
+    } catch (e) {
+      setState(() {
+        question = "Failed to generate question.";
+      });
+    }
+  }
+
+  void analyzeAnswer() async {
+    try {
+      if (userAnswer != null && userAnswer!.isNotEmpty) {
+        // Send the user input along with the correct answer to analyze it
+        final analysisResponse = await model.generateContent([
           Content.text(
-              'Provide the correct answer to the following question: $question')
+              'Analyze the answer "$userAnswer" in relation to the question "$question" and provide feedback. Do not criticize the user if the answer is not correct, just encourage the user if they are wrong.')
         ]);
 
         setState(() {
-          answer = answerResponse.text ?? "No answer generated.";
-        });
-      } else {
-        setState(() {
-          answer = "Failed to generate a valid question.";
+          responseAnalysis = analysisResponse.text ?? "Analysis failed.";
         });
       }
     } catch (e) {
       setState(() {
-        question = "Failed to generate question.";
-        answer = "Failed to generate answer.";
+        responseAnalysis = "Error analyzing answer.";
       });
     }
   }
@@ -71,133 +80,127 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
         title: Text(widget.itemName),
         backgroundColor: Colors.purple.shade200,
       ),
-      body: Column(
-        children: [
-          const SizedBox(height: 20),
-          // Check if the question and answer are ready
-          question == null || answer == null
-              ? CircularProgressIndicator() // Show loading indicator
-              : Text(
-                  question ?? "Generating question...",
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            const SizedBox(height: 20),
+            // Check if the question and answer are ready
+            question == null
+                ? const CircularProgressIndicator() // Show loading indicator
+                : Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Text(
+                      question ?? "Generating question...",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.purple.shade700,
+                      ),
+                      textAlign: TextAlign.justify, // Justified question
+                    ),
+                  ),
+            const SizedBox(height: 20),
+            // Show user input for the answer only before submission
+            if (responseAnalysis == null)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: TextField(
+                  controller: _answerController,
+                  decoration: InputDecoration(
+                    labelText: 'Your Answer',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                  ),
+                  onChanged: (value) {
+                    setState(() {
+                      userAnswer = value;
+                    });
+                  },
+                ),
+              ),
+            const SizedBox(height: 20),
+            if (responseAnalysis == null) ...[
+              ElevatedButton(
+                onPressed: () {
+                  analyzeAnswer();
+                },
+                child: const Text('Submit Answer'),
+                style: ElevatedButton.styleFrom(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                ),
+              ),
+            ],
+            const SizedBox(height: 20),
+            // Show response analysis after submission or encouraging message
+            if (responseAnalysis != null) ...[
+              Container(
+                padding: const EdgeInsets.all(16),
+                margin: const EdgeInsets.symmetric(horizontal: 20),
+                decoration: BoxDecoration(
+                  color: Colors.purple.shade50,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: Colors.purple.shade300,
+                    width: 2,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.purple.withOpacity(0.2),
+                      blurRadius: 8,
+                      offset: const Offset(0, 5),
+                    ),
+                  ],
+                ),
+                child: Text(
+                  responseAnalysis ?? "No analysis available.",
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                     color: Colors.purple.shade700,
                   ),
+                  textAlign: TextAlign.justify, // Justified response
+                ),
+              ),
+            ],
+            // Display encouragement if the user hasn't answered yet or their answer is incorrect
+            if (userAnswer == null ||
+                userAnswer!.isEmpty ||
+                responseAnalysis == "Error analyzing answer")
+              Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Text(
+                  'No worries if you didn\'t know the answer! Try your best, and I\'m here to help. You\'ll get there!',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.green.shade600,
+                  ),
                   textAlign: TextAlign.center,
                 ),
-          Expanded(
-            child: PageView.builder(
-              controller: pageController,
-              itemCount: 10, // Example number of questions
-              itemBuilder: (context, index) {
-                return GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      flippedStates[index] = !flippedStates[index];
-                    });
-                  },
-                  child: AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 500),
-                    transitionBuilder: (widget, animation) {
-                      return RotationYTransition(
-                        turns: Tween(begin: 0.0, end: 1.0).animate(animation),
-                        child: widget,
-                      );
-                    },
-                    child: flippedStates[index]
-                        ? _buildAnswerCard(index)
-                        : _buildBackCard(index),
-                  ),
-                );
+              ),
+            const SizedBox(height: 20),
+            // Refresh Button to generate new question and answer
+            ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  question = null;
+                  responseAnalysis = null;
+                  userAnswer = null;
+                  _answerController.clear(); // Clear the text input
+                });
+                generateQnA();
               },
+              child: const Text('Generate New Question'),
+              style: ElevatedButton.styleFrom(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+              ),
             ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildBackCard(int index) {
-    return _buildCard(
-      key: ValueKey("back_$index"),
-      text: "Tap to Reveal",
-      color: Colors.purple.shade200,
-    );
-  }
-
-  Widget _buildAnswerCard(int index) {
-    return _buildCard(
-      key: ValueKey("answer_$index"),
-      text: answer ?? "Answer not available",
-      color: Colors.purple.shade50,
-    );
-  }
-
-  Widget _buildCard(
-      {required Key key, required String text, required Color color}) {
-    return Container(
-      key: key,
-      margin: const EdgeInsets.all(20),
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: color,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.3),
-            blurRadius: 10,
-            offset: const Offset(0, 5),
-          ),
-        ],
-      ),
-      child: Center(
-        child: SingleChildScrollView(
-          child: Text(
-            text,
-            style: const TextStyle(
-              fontSize: 20,
-              height: 1.5,
-              fontWeight: FontWeight.bold,
-            ),
-            textAlign: TextAlign.justify, // Justified text
-          ),
+          ],
         ),
       ),
-    );
-  }
-}
-
-// Flip animation helper
-class RotationYTransition extends StatelessWidget {
-  final Widget child;
-  final Animation<double> turns;
-
-  const RotationYTransition(
-      {required this.child, required this.turns, Key? key})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: turns,
-      builder: (context, child) {
-        final angle = turns.value * 3.1415927;
-        final isFlipped = turns.value > 0.5;
-
-        return Transform(
-          alignment: Alignment.center,
-          transform: Matrix4.rotationY(angle),
-          child: isFlipped
-              ? Transform(
-                  alignment: Alignment.center,
-                  transform: Matrix4.rotationY(3.1415927),
-                  child: child,
-                )
-              : child,
-        );
-      },
-      child: child,
     );
   }
 }
