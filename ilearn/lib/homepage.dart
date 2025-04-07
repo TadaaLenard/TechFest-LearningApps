@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:ilearn/search.dart';
 import 'package:ilearn/second_screen.dart';
+import 'package:ilearn/tutorials.dart';
+import 'package:ilearn/workshop.dart';
 
 // ✅ Organized topic data
 final Map<String, List<String>> topicData = {
@@ -98,7 +100,13 @@ class _MyHomePageState extends State<MyHomePage> {
                       SizedBox(
                         width: 150,
                         child: ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => WorkshopListScreen()),
+                            );
+                          },
                           style: ElevatedButton.styleFrom(
                             padding: EdgeInsets.symmetric(
                                 vertical: 12, horizontal: 16),
@@ -121,7 +129,11 @@ class _MyHomePageState extends State<MyHomePage> {
                         width: 150,
                         child: ElevatedButton(
                           onPressed: () {
-                            print("Button Pressed!");
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => TutorialListScreen()),
+                            );
                           },
                           style: ElevatedButton.styleFrom(
                             padding: EdgeInsets.symmetric(
