@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:ilearn/second_screen.dart';
+import 'package:ilearn/second_screen.dart'; // Assuming FactScreen is here
 
 class SearchScreen extends StatefulWidget {
   final List<String> items;
+  final Map<String, List<String>>
+      factsByTopic; // Assuming facts are passed as a map
 
-  const SearchScreen({Key? key, required this.items}) : super(key: key);
+  const SearchScreen(
+      {Key? key, required this.items, required this.factsByTopic})
+      : super(key: key);
 
   @override
   State<SearchScreen> createState() => _SearchScreenState();
@@ -37,10 +41,18 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   void _onItemTap(String item) {
+    // Fetch the corresponding facts for the selected item
+    final facts =
+        widget.factsByTopic[item] ?? ["No facts available for this topic."];
+
+    // Navigate to FactScreen, passing itemName and facts
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => FactScreen(itemName: item),
+        builder: (context) => FactScreen(
+          itemName: item,
+          facts: facts,
+        ),
       ),
     );
   }

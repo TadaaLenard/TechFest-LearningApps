@@ -91,3 +91,6 @@ flutter:
 
   assets:
     - .env
+    - assets/data/tutorials.json
+    - assets/data/workshops.json
+    - assets/data/topics.json
