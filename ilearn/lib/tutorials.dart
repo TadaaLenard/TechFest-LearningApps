@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ilearn/data_loader.dart';
 import 'package:ilearn/tutorialvid.dart';
 
 class Tutorial {
@@ -15,89 +16,63 @@ class Tutorial {
     required this.description,
     List<String>? comments,
   }) : comments = comments ?? [];
+
+  // Define fromJson to parse the JSON object into a Tutorial object
+  factory Tutorial.fromJson(Map<String, dynamic> json) {
+    return Tutorial(
+      name: json['name'],
+      videoLength: json['videoLength'],
+      author: json['author'],
+      description: json['description'],
+      // Optional: you can add comments if needed
+      comments: [],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'videoLength': videoLength,
+      'author': author,
+      'description': description,
+    };
+  }
 }
 
 class TutorialListScreen extends StatelessWidget {
-  final List<Tutorial> tutorials = [
-    Tutorial(
-      name: 'Introduction to Classical Mechanics',
-      videoLength: '1 hour 45 minutes',
-      author: 'Dr. Albert Newton',
-      description:
-          'Learn the fundamentals of classical mechanics, including Newton\'s laws and motion.',
-    ),
-    Tutorial(
-      name: 'Organic Chemistry: Hydrocarbons',
-      videoLength: '2 hours 30 minutes',
-      author: 'Prof. Sarah Johnson',
-      description:
-          'An in-depth tutorial on the properties and reactions of hydrocarbons in organic chemistry.',
-    ),
-    Tutorial(
-      name: 'Basic Spanish: Beginner Level',
-      videoLength: '1 hour 20 minutes',
-      author: 'Carlos Garcia',
-      description:
-          'A beginner-level Spanish tutorial covering basic vocabulary, greetings, and sentence structure.',
-    ),
-    Tutorial(
-      name: 'Introduction to Genetics',
-      videoLength: '2 hours 0 minutes',
-      author: 'Dr. Emily Watson',
-      description:
-          'Understand the basics of genetics, including inheritance, DNA structure, and gene expression.',
-    ),
-    Tutorial(
-      name: 'Basic French Conversation',
-      videoLength: '1 hour 10 minutes',
-      author: 'Marie Dubois',
-      description:
-          'Improve your French through simple conversation practices, ideal for beginners.',
-    ),
-    Tutorial(
-      name: 'Physics of Electromagnetism',
-      videoLength: '2 hours 45 minutes',
-      author: 'Dr. Maxwell Faraday',
-      description:
-          'Dive deep into the principles of electromagnetism, covering electric fields, magnetic fields, and waves.',
-    ),
-    Tutorial(
-      name: 'Introductory Mandarin for Beginners',
-      videoLength: '1 hour 30 minutes',
-      author: 'Ling Zhang',
-      description:
-          'Learn the basics of Mandarin Chinese, including common phrases and basic grammar.',
-    ),
-    Tutorial(
-      name: 'Environmental Science: Ecosystems and Biodiversity',
-      videoLength: '2 hours 15 minutes',
-      author: 'Dr. Laura Green',
-      description:
-          'Explore the importance of ecosystems and biodiversity in this detailed environmental science tutorial.',
-    ),
-    Tutorial(
-      name: 'Advanced Physics: Quantum Mechanics',
-      videoLength: '3 hours 0 minutes',
-      author: 'Dr. Richard Feynman',
-      description:
-          'A deep dive into quantum mechanics, including wave functions, uncertainty principle, and quantum entanglement.',
-    ),
-  ];
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Tutorials'),
-        centerTitle: true,
-      ),
-      body: ListView.builder(
-        padding: const EdgeInsets.all(12.0),
-        itemCount: tutorials.length,
-        itemBuilder: (context, index) {
-          return TutorialCard(tutorial: tutorials[index]);
-        },
-      ),
+    return FutureBuilder<List<Tutorial>>(
+      future: loadDataFromJson<Tutorial>(
+          'assets/data/tutorials.json', (json) => Tutorial.fromJson(json)),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Scaffold(
+              body: Center(child: CircularProgressIndicator()));
+        }
+
+        if (snapshot.hasError) {
+          return Scaffold(
+            body: Center(child: Text('Error: ${snapshot.error}')),
+          );
+        }
+
+        final tutorials = snapshot.data!;
+
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text('Tutorials'),
+            centerTitle: true,
+          ),
+          body: ListView.builder(
+            padding: const EdgeInsets.all(12.0),
+            itemCount: tutorials.length,
+            itemBuilder: (context, index) {
+              return TutorialCard(tutorial: tutorials[index]);
+            },
+          ),
+        );
+      },
     );
   }
 }

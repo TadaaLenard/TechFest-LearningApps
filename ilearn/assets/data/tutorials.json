@@ -1,0 +1,57 @@
+[
+    {
+      "name": "Introduction to Classical Mechanics",
+      "videoLength": "1 hour 45 minutes",
+      "author": "Dr. Albert Newton",
+      "description": "Learn the fundamentals of classical mechanics, including Newton's laws and motion."
+    },
+    {
+      "name": "Organic Chemistry: Hydrocarbons",
+      "videoLength": "2 hours 30 minutes",
+      "author": "Prof. Sarah Johnson",
+      "description": "An in-depth tutorial on the properties and reactions of hydrocarbons in organic chemistry."
+    },
+    {
+      "name": "Basic Spanish: Beginner Level",
+      "videoLength": "1 hour 20 minutes",
+      "author": "Carlos Garcia",
+      "description": "A beginner-level Spanish tutorial covering basic vocabulary, greetings, and sentence structure."
+    },
+    {
+      "name": "Introduction to Genetics",
+      "videoLength": "2 hours 0 minutes",
+      "author": "Dr. Emily Watson",
+      "description": "Understand the basics of genetics, including inheritance, DNA structure, and gene expression."
+    },
+    {
+      "name": "Basic French Conversation",
+      "videoLength": "1 hour 10 minutes",
+      "author": "Marie Dubois",
+      "description": "Improve your French through simple conversation practices, ideal for beginners."
+    },
+    {
+      "name": "Physics of Electromagnetism",
+      "videoLength": "2 hours 45 minutes",
+      "author": "Dr. Maxwell Faraday",
+      "description": "Dive deep into the principles of electromagnetism, covering electric fields, magnetic fields, and waves."
+    },
+    {
+      "name": "Introductory Mandarin for Beginners",
+      "videoLength": "1 hour 30 minutes",
+      "author": "Ling Zhang",
+      "description": "Learn the basics of Mandarin Chinese, including common phrases and basic grammar."
+    },
+    {
+      "name": "Environmental Science: Ecosystems and Biodiversity",
+      "videoLength": "2 hours 15 minutes",
+      "author": "Dr. Laura Green",
+      "description": "Explore the importance of ecosystems and biodiversity in this detailed environmental science tutorial."
+    },
+    {
+      "name": "Advanced Physics: Quantum Mechanics",
+      "videoLength": "3 hours 0 minutes",
+      "author": "Dr. Richard Feynman",
+      "description": "A deep dive into quantum mechanics, including wave functions, uncertainty principle, and quantum entanglement."
+    }
+  ]
+  

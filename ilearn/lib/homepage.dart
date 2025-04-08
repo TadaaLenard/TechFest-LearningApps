@@ -1,34 +1,27 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:ilearn/search.dart';
-import 'package:ilearn/second_screen.dart';
+import 'package:ilearn/second_screen.dart'; // Assume this is where FactScreen is
 import 'package:ilearn/tutorials.dart';
 import 'package:ilearn/workshop.dart';
 
-// ✅ Organized topic data
-final Map<String, List<String>> topicData = {
-  "Physics": [
-    "Gravity 1",
-    "Gravity 2",
-    "Force 1",
-    "Force 2",
-    "Electromagnetic",
-  ],
-  "Biology": [
-    "Photosynthesis",
-    "Cell Organisation",
-    "Nutrition",
-    "Reproduction",
-  ],
-  "English": [
-    "Pronunciation",
-    "Grammar 1",
-    "Grammar 2",
-    "Grammar 3",
-    "Formal Writing",
-  ],
-};
+class Topic {
+  final String category;
+  final String name;
+  final List<String> details;
 
-// 🔲 Main Home Page
+  Topic({required this.category, required this.name, required this.details});
+
+  factory Topic.fromJson(Map<String, dynamic> json) {
+    return Topic(
+      category: json['category'],
+      name: json['name'],
+      details: List<String>.from(json['details']),
+    );
+  }
+}
+
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
   final String title;
@@ -38,18 +31,37 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  List<Topic> topicData = [];
 
-  void _incrementCounter() {
+  @override
+  void initState() {
+    super.initState();
+    loadTopicData();
+  }
+
+  Future<void> loadTopicData() async {
+    final String jsonString =
+        await rootBundle.loadString('assets/data/topics.json');
+    final Map<String, dynamic> jsonMap = json.decode(jsonString);
+
+    List<Topic> topics = [];
+    jsonMap.forEach((category, categoryData) {
+      categoryData.forEach((topicName, details) {
+        topics.add(Topic(
+          category: category,
+          name: topicName,
+          details: List<String>.from(details),
+        ));
+      });
+    });
+
     setState(() {
-      _counter++;
+      topicData = topics;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final allItems = topicData.values.expand((list) => list).toList();
-
     return Scaffold(
       body: Theme(
         data: Theme.of(context).copyWith(
@@ -78,8 +90,16 @@ class _MyHomePageState extends State<MyHomePage> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) =>
-                                    SearchScreen(items: allItems),
+                                builder: (context) => SearchScreen(
+                                  items: topicData
+                                      .map((topic) => topic.name)
+                                      .toList(),
+                                  factsByTopic: Map.fromIterable(
+                                    topicData,
+                                    key: (topic) => topic.name,
+                                    value: (topic) => topic.details,
+                                  ),
+                                ),
                               ),
                             );
                           },
@@ -104,7 +124,8 @@ class _MyHomePageState extends State<MyHomePage> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => WorkshopListScreen()),
+                                builder: (context) => WorkshopListScreen(),
+                              ),
                             );
                           },
                           style: ElevatedButton.styleFrom(
@@ -132,7 +153,8 @@ class _MyHomePageState extends State<MyHomePage> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => TutorialListScreen()),
+                                builder: (context) => TutorialListScreen(),
+                              ),
                             );
                           },
                           style: ElevatedButton.styleFrom(
@@ -142,32 +164,45 @@ class _MyHomePageState extends State<MyHomePage> {
                               borderRadius: BorderRadius.circular(16),
                             ),
                           ),
-                          child: const Column(children: [
-                            Icon(Icons.video_call_rounded,
-                                color: Colors.purple, size: 70),
-                            SizedBox(height: 4),
-                            Text("Tutorial")
-                          ]),
+                          child: const Column(
+                            children: [
+                              Icon(Icons.video_call_rounded,
+                                  color: Colors.purple, size: 70),
+                              SizedBox(height: 4),
+                              Text("Tutorial")
+                            ],
+                          ),
                         ),
                       ),
                     ],
                   ),
                 ),
                 Divider(color: Colors.black, thickness: 1, height: 20),
-
-                // ✅ Sciences
                 Container(
                   padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SectionTitle("Sciences"),
-                      CategorySection("Physics", topicData["Physics"]!),
-                      CategorySection("Biology", topicData["Biology"]!),
-
-                      // ✅ Language
+                      CategorySection(
+                        "Physics",
+                        topicData
+                            .where((topic) => topic.category == 'Physics')
+                            .toList(),
+                      ),
+                      CategorySection(
+                        "Biology",
+                        topicData
+                            .where((topic) => topic.category == 'Biology')
+                            .toList(),
+                      ),
                       SectionTitle("Language"),
-                      CategorySection("English", topicData["English"]!),
+                      CategorySection(
+                        "English",
+                        topicData
+                            .where((topic) => topic.category == 'English')
+                            .toList(),
+                      ),
                     ],
                   ),
                 ),
@@ -180,18 +215,17 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-// 🔲 Scrollable horizontal button list
 class ScrollableButtonList extends StatelessWidget {
-  final List<String> items;
+  final List<Topic> topics;
 
-  const ScrollableButtonList({required this.items});
+  const ScrollableButtonList({required this.topics});
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
-        children: items.map((item) {
+        children: topics.map((topic) {
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: SizedBox(
@@ -201,7 +235,10 @@ class ScrollableButtonList extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => FactScreen(itemName: item),
+                      builder: (context) => FactScreen(
+                        itemName: topic.name,
+                        facts: topic.details, // 👈 Corrected line
+                      ),
                     ),
                   );
                 },
@@ -211,7 +248,7 @@ class ScrollableButtonList extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20),
                   ),
                 ),
-                child: Text(item, style: TextStyle(color: Colors.black)),
+                child: Text(topic.name, style: TextStyle(color: Colors.black)),
               ),
             ),
           );
@@ -221,7 +258,6 @@ class ScrollableButtonList extends StatelessWidget {
   }
 }
 
-// 🔲 Reusable section title widget
 Widget SectionTitle(String title) {
   return Padding(
     padding: const EdgeInsets.only(bottom: 10),
@@ -236,8 +272,7 @@ Widget SectionTitle(String title) {
   );
 }
 
-// 🔲 Reusable category + list widget
-Widget CategorySection(String categoryName, List<String> items) {
+Widget CategorySection(String categoryName, List<Topic> topics) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -246,7 +281,7 @@ Widget CategorySection(String categoryName, List<String> items) {
         style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
       ),
       SizedBox(height: 10),
-      ScrollableButtonList(items: items),
+      ScrollableButtonList(topics: topics),
       SizedBox(height: 20),
     ],
   );
