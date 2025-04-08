@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:ilearn/tutorialvid.dart';
 
 class Tutorial {
   final String name;
   final String videoLength;
   final String author;
   final String description;
+  final List<String> comments;
 
   Tutorial({
     required this.name,
     required this.videoLength,
     required this.author,
     required this.description,
-  });
+    List<String>? comments,
+  }) : comments = comments ?? [];
 }
 
 class TutorialListScreen extends StatelessWidget {
@@ -106,27 +109,38 @@ class TutorialCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.symmetric(vertical: 8.0),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      elevation: 4,
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(tutorial.name,
-                style:
-                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 8),
-            Text('Video Length: ${tutorial.videoLength}',
-                style: const TextStyle(color: Colors.grey)),
-            const SizedBox(height: 4),
-            Text('Author: ${tutorial.author}',
-                style: const TextStyle(color: Colors.grey)),
-            const SizedBox(height: 12),
-            Text(tutorial.description),
-          ],
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => TutorialDetailScreen(tutorial: tutorial),
+          ),
+        );
+      },
+      borderRadius: BorderRadius.circular(12),
+      child: Card(
+        margin: const EdgeInsets.symmetric(vertical: 8.0),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        elevation: 4,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(tutorial.name,
+                  style: const TextStyle(
+                      fontSize: 18, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 8),
+              Text('Video Length: ${tutorial.videoLength}',
+                  style: const TextStyle(color: Colors.grey)),
+              const SizedBox(height: 4),
+              Text('Author: ${tutorial.author}',
+                  style: const TextStyle(color: Colors.grey)),
+              const SizedBox(height: 12),
+              Text(tutorial.description),
+            ],
+          ),
         ),
       ),
     );
