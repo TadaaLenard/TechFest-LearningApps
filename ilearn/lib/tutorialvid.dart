@@ -11,15 +11,17 @@ class TutorialDetailScreen extends StatefulWidget {
 }
 
 class _TutorialDetailScreenState extends State<TutorialDetailScreen> {
-  late List<String> comments;
+  late List<String> comments; // To store comments for the tutorial shown.
   final TextEditingController _commentController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    comments = widget.tutorial.comments; // Persist comments in the model
+    comments =
+        widget.tutorial.comments; // Persist comments in the tutorial objects.
   }
 
+  // Functions to add new comments into the comment list.
   void _addComment() {
     final text = _commentController.text.trim();
     if (text.isNotEmpty) {

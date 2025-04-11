@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ilearn/data_loader.dart';
 
+// Define Workshop class to store the workshops' object data
 class Workshop {
   final String name;
   final String dateTime;
@@ -14,6 +15,7 @@ class Workshop {
     required this.description,
   });
 
+  // Create workshop instances to store workshop data
   factory Workshop.fromJson(Map<String, dynamic> json) {
     return Workshop(
       name: json['name'],
@@ -36,6 +38,10 @@ class Workshop {
 class WorkshopListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    // Since the UI of the screen needs to wait for the data to be loaded from the JSON,
+    // the screen widget should rebuild itself when
+    // it receive a value(workshop data in this case),
+    // Hence Future Builder widget class is implemented
     return FutureBuilder<List<Workshop>>(
       future: loadDataFromJson<Workshop>(
         'assets/data/workshops.json',
@@ -73,6 +79,7 @@ class WorkshopListScreen extends StatelessWidget {
   }
 }
 
+// Card widget to display each workshop information
 class WorkshopCard extends StatelessWidget {
   final Workshop workshop;
 

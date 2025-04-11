@@ -2,10 +2,11 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:ilearn/search.dart';
-import 'package:ilearn/second_screen.dart'; // Assume this is where FactScreen is
+import 'package:ilearn/second_screen.dart';
 import 'package:ilearn/tutorials.dart';
 import 'package:ilearn/workshop.dart';
 
+// Define Topic class to store the topics object data
 class Topic {
   final String category;
   final String name;
@@ -13,6 +14,7 @@ class Topic {
 
   Topic({required this.category, required this.name, required this.details});
 
+  // Create topic instance from loaded data
   factory Topic.fromJson(Map<String, dynamic> json) {
     return Topic(
       category: json['category'],
@@ -36,14 +38,18 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-    loadTopicData();
+    loadTopicData(); // Load topic data from JSON file during initialisation
   }
 
   Future<void> loadTopicData() async {
+    // Load topic data from JSON file
     final String jsonString =
         await rootBundle.loadString('assets/data/topics.json');
     final Map<String, dynamic> jsonMap = json.decode(jsonString);
 
+    // Since there are different subjects, each subject has different categories,
+    // each category has different topics, create topic instances for each topic
+    // under different categories.
     List<Topic> topics = [];
     jsonMap.forEach((category, categoryData) {
       categoryData.forEach((topicName, details) {
@@ -56,7 +62,8 @@ class _MyHomePageState extends State<MyHomePage> {
     });
 
     setState(() {
-      topicData = topics;
+      topicData =
+          topics; // Assign those topic instances into the topicData list
     });
   }
 
@@ -91,6 +98,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => SearchScreen(
+                                  // Pass topic's data as parameter to the Search Screen.
                                   items: topicData
                                       .map((topic) => topic.name)
                                       .toList(),
@@ -215,6 +223,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
+// Customised scrollable widget to display buttons for each topics
 class ScrollableButtonList extends StatelessWidget {
   final List<Topic> topics;
 
@@ -223,7 +232,7 @@ class ScrollableButtonList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
+      scrollDirection: Axis.horizontal, // Scrollable horizontally
       child: Row(
         children: topics.map((topic) {
           return Padding(
@@ -237,7 +246,7 @@ class ScrollableButtonList extends StatelessWidget {
                     MaterialPageRoute(
                       builder: (context) => FactScreen(
                         itemName: topic.name,
-                        facts: topic.details, // 👈 Corrected line
+                        facts: topic.details,
                       ),
                     ),
                   );
@@ -258,6 +267,7 @@ class ScrollableButtonList extends StatelessWidget {
   }
 }
 
+// Customised widget to display the section's title
 Widget SectionTitle(String title) {
   return Padding(
     padding: const EdgeInsets.only(bottom: 10),
@@ -272,6 +282,7 @@ Widget SectionTitle(String title) {
   );
 }
 
+// Customised widget to display the categories' title
 Widget CategorySection(String categoryName, List<Topic> topics) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,

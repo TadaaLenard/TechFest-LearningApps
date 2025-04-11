@@ -2,8 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 
+// Define a variable to store the Gemini API key loaded from .env file,
+// If it is not avaiable, load a default api key,
+// which is set to a string in this case since there is no default api key.
 String _apiKey = dotenv.env['GeminiAPI'] ?? 'default_api_key';
 
+// Define a model to store the selected Gemini model
 final model = GenerativeModel(
   model: 'gemini-1.5-flash-latest',
   apiKey: _apiKey,
@@ -28,7 +32,7 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
   @override
   void initState() {
     super.initState();
-    generateQnA();
+    generateQnA(); // Generate a questions provided by Gemini during initialisation
   }
 
   void generateQnA() async {
@@ -42,7 +46,6 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
       setState(() {
         question = questionResponse.text ?? "No question generated.";
         // Clear the answer and response when generating new content
-
         responseAnalysis = null;
         userAnswer = null;
       });
@@ -56,14 +59,15 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
   void analyzeAnswer() async {
     try {
       if (userAnswer != null && userAnswer!.isNotEmpty) {
-        // Send the user input along with the correct answer to analyze it
+        // Send the user input along with the question to analyze it
         final analysisResponse = await model.generateContent([
           Content.text(
-              'Analyze the answer "$userAnswer" in relation to the question "$question" and provide feedback. Do not criticize the user if the answer is not correct, just encourage the user if they are wrong.')
+              'Analyze the answer "$userAnswer" in relation to the question "$question" and provide feedback and correct answer. Do not criticize the user if the answer is not correct, just encourage the user if they are wrong.')
         ]);
 
         setState(() {
-          responseAnalysis = analysisResponse.text ?? "Analysis failed.";
+          responseAnalysis = analysisResponse.text ??
+              "Analysis failed."; // Assign the response from Gemini
         });
       }
     } catch (e) {
@@ -84,7 +88,7 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
         child: Column(
           children: [
             const SizedBox(height: 20),
-            // Check if the question and answer are ready
+            // Check if the question is ready
             question == null
                 ? const CircularProgressIndicator() // Show loading indicator
                 : Padding(
@@ -133,7 +137,7 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
               ),
             ],
             const SizedBox(height: 20),
-            // Show response analysis after submission or encouraging message
+            // Show response analysis after submission
             if (responseAnalysis != null) ...[
               Container(
                 padding: const EdgeInsets.all(16),

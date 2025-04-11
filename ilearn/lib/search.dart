@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:ilearn/second_screen.dart'; // Assuming FactScreen is here
+import 'package:ilearn/second_screen.dart';
 
 class SearchScreen extends StatefulWidget {
   final List<String> items;
   final Map<String, List<String>>
-      factsByTopic; // Assuming facts are passed as a map
+      factsByTopic; // To store descriptions of the topic after passed from the homepage.
 
   const SearchScreen(
       {Key? key, required this.items, required this.factsByTopic})
@@ -21,10 +21,14 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   void initState() {
     super.initState();
-    _filteredItems = List.from(widget.items);
-    _searchController.addListener(_onSearchChanged);
+    _filteredItems =
+        List.from(widget.items); // Initialise to display all topics
+    _searchController.addListener(
+        _onSearchChanged); // Perform the method when the controller value changes
   }
 
+  // Function that manages user input in searching topics
+  // Changes the filtered items based on user input
   void _onSearchChanged() {
     setState(() {
       _filteredItems = widget.items
