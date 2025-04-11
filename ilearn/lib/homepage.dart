@@ -98,6 +98,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => SearchScreen(
+                                  // Pass topic's data as parameter to the Search Screen.
                                   items: topicData
                                       .map((topic) => topic.name)
                                       .toList(),
@@ -222,6 +223,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
+// Customised scrollable widget to display buttons for each topics
 class ScrollableButtonList extends StatelessWidget {
   final List<Topic> topics;
 
@@ -230,7 +232,7 @@ class ScrollableButtonList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
+      scrollDirection: Axis.horizontal, // Scrollable horizontally
       child: Row(
         children: topics.map((topic) {
           return Padding(
@@ -244,7 +246,7 @@ class ScrollableButtonList extends StatelessWidget {
                     MaterialPageRoute(
                       builder: (context) => FactScreen(
                         itemName: topic.name,
-                        facts: topic.details, // 👈 Corrected line
+                        facts: topic.details,
                       ),
                     ),
                   );
@@ -265,6 +267,7 @@ class ScrollableButtonList extends StatelessWidget {
   }
 }
 
+// Customised widget to display the section's title
 Widget SectionTitle(String title) {
   return Padding(
     padding: const EdgeInsets.only(bottom: 10),
@@ -279,6 +282,7 @@ Widget SectionTitle(String title) {
   );
 }
 
+// Customised widget to display the categories' title
 Widget CategorySection(String categoryName, List<Topic> topics) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,

@@ -62,7 +62,7 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
         // Send the user input along with the question to analyze it
         final analysisResponse = await model.generateContent([
           Content.text(
-              'Analyze the answer "$userAnswer" in relation to the question "$question" and provide feedback. Do not criticize the user if the answer is not correct, just encourage the user if they are wrong.')
+              'Analyze the answer "$userAnswer" in relation to the question "$question" and provide feedback and correct answer. Do not criticize the user if the answer is not correct, just encourage the user if they are wrong.')
         ]);
 
         setState(() {
