@@ -13,7 +13,8 @@ class FactScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final PageController pageController = PageController();
+    final PageController pageController =
+        PageController(); // To control the current page number
 
     return Scaffold(
       appBar: AppBar(
@@ -99,6 +100,7 @@ class FactScreen extends StatelessWidget {
                   width: 130,
                   child: ElevatedButton.icon(
                     onPressed: () {
+                      // if it is not the first info, shows the previous info
                       if (pageController.page! > 0) {
                         pageController.previousPage(
                           duration: const Duration(milliseconds: 300),
@@ -120,6 +122,7 @@ class FactScreen extends StatelessWidget {
                   width: 130,
                   child: ElevatedButton.icon(
                     onPressed: () {
+                      // If it is not the last info, shows the next info
                       if (pageController.page! < facts.length - 1) {
                         pageController.nextPage(
                           duration: const Duration(milliseconds: 300),

@@ -2,10 +2,11 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:ilearn/search.dart';
-import 'package:ilearn/second_screen.dart'; // Assume this is where FactScreen is
+import 'package:ilearn/second_screen.dart';
 import 'package:ilearn/tutorials.dart';
 import 'package:ilearn/workshop.dart';
 
+// Define Topic class to store the topics object data
 class Topic {
   final String category;
   final String name;
@@ -13,6 +14,7 @@ class Topic {
 
   Topic({required this.category, required this.name, required this.details});
 
+  // Create topic instance from loaded data
   factory Topic.fromJson(Map<String, dynamic> json) {
     return Topic(
       category: json['category'],
@@ -36,14 +38,18 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-    loadTopicData();
+    loadTopicData(); // Load topic data from JSON file during initialisation
   }
 
   Future<void> loadTopicData() async {
+    // Load topic data from JSON file
     final String jsonString =
         await rootBundle.loadString('assets/data/topics.json');
     final Map<String, dynamic> jsonMap = json.decode(jsonString);
 
+    // Since there are different subjects, each subject has different categories,
+    // each category has different topics, create topic instances for each topic
+    // under different categories.
     List<Topic> topics = [];
     jsonMap.forEach((category, categoryData) {
       categoryData.forEach((topicName, details) {
@@ -56,7 +62,8 @@ class _MyHomePageState extends State<MyHomePage> {
     });
 
     setState(() {
-      topicData = topics;
+      topicData =
+          topics; // Assign those topic instances into the topicData list
     });
   }
 

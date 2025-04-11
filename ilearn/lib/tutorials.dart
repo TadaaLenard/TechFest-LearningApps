@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ilearn/data_loader.dart';
 import 'package:ilearn/tutorialvid.dart';
 
+// Define Tutorial class to store the tutorials' object data
 class Tutorial {
   final String name;
   final String videoLength;
@@ -42,6 +43,10 @@ class Tutorial {
 class TutorialListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    // Since the UI of the screen needs to wait for the data to be loaded from the JSON,
+    // the screen widget should rebuild itself when
+    // it receive a value(tutorials data in this case),
+    // Hence Future Builder widget class is implemented
     return FutureBuilder<List<Tutorial>>(
       future: loadDataFromJson<Tutorial>(
           'assets/data/tutorials.json', (json) => Tutorial.fromJson(json)),
@@ -77,6 +82,7 @@ class TutorialListScreen extends StatelessWidget {
   }
 }
 
+// Card widget to display each tutorial information
 class TutorialCard extends StatelessWidget {
   final Tutorial tutorial;
 
